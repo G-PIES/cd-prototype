@@ -1,0 +1,29 @@
+name: Build and Create Executable Artifact
+
+on: pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up C++ environment
+        uses: kurocha/setup-cpp@v1
+        with:
+          compiler: 'g++'
+
+
+      - name: Build backend
+        run: make lib
+      - name: Build sim
+        run: make cluster_dynamics
+
+
+      - name: Upload Executable
+        uses: actions/upload-artifact@v2
+        with:
+          name: cluster_dynamics
+          path: cluster_dynamics.out
