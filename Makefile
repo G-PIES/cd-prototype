@@ -7,6 +7,8 @@ ifeq ($(OS), Windows_NT)
 	else ifeq ($(PROCESSOR_ARCHITECTURE), x86)
 		CCFLAGS += -D IA32
 	endif
+	CCFLAGS += -D_USE_MATH_DEFINES
+	LIB_EXT := .dll
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S), Linux)
@@ -23,6 +25,7 @@ else
 	else ifneq ($(filter arm%, $(UNAME_P)),)
 		CCFLAGS += -D ARM
 	endif
+	LIB_EXT := .so
 endif
 
 CC = g++
@@ -33,7 +36,7 @@ LIB_DIR = ./lib
 
 ext = .out
 binary = cluster_dynamics$(ext)
-library = lib/libclusterdynamics.so
+library = lib/libclusterdynamics$(LIB_EXT)
 
 ifdef C
 	CCFLAGS += -D CONCENTRATION_BOUNDARY=$(C)
@@ -91,4 +94,4 @@ run:
 
 # remove binaries
 clean:
-	rm *$(ext) lib/*.so
+	rm *$(ext) lib/*$(LIB_EXT)
